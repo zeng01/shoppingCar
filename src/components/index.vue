@@ -17,30 +17,27 @@
                                     <h3>
                                         <i class="iconfont icon-arrow-right"></i>
                                         <span>{{item.title}}</span>
-                                        <p>
-                                            <!-- <span v-for="(it, index) in subcates" :key="index">
-                                                {{it.title}}&nbsp;
-                                            </span> -->
+                                       <p>
                                             <span>
-                                                {{item.subcates[0].title}}&nbsp;
+                                                手机通讯&nbsp;
                                             </span>
                                             <span>
-                                                {{item.subcates[1].title}}&nbsp;
+                                                摄影摄像&nbsp;
                                             </span>
                                             <span>
-                                                {{item.subcates[2].title}}&nbsp;
+                                                存储设备&nbsp;
                                             </span>
                                         </p>
                                     </h3>
                                     <div class="item-box">
                                         <dl>
                                             <dt>
-                                                <a href="/goods/40.html">{{item.title}}</a>
+                                                <a href="/goods/40.html">手机数码</a>
                                             </dt>
                                             <dd>
-                                                <a href="/goods/43.html">{{item.subcates[0].title}}</a>
-                                                <a href="/goods/43.html">{{item.subcates[1].title}}</a>
-                                                <a href="/goods/43.html">{{item.subcates[2].title}}</a>
+                                                <a href="/goods/43.html">手机通讯</a>
+                                                <a href="/goods/43.html">摄影摄像</a>
+                                                <a href="/goods/43.html">存储设备</a>
                                             </dd>
                                         </dl>
                                     </div>
@@ -188,7 +185,7 @@
                 </div>
             </div>
         </div>
-        <div class="section">
+        <!-- <div class="section">
             <div class="main-tit">
                 <h2>手机数码</h2>
                 <p>
@@ -513,12 +510,12 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="section">
+        </div> -->
+        <div class="section" v-for="(item, index) in sectionList" :key="index">
             <div class="main-tit">
-                <h2>服装类</h2>
+                <h2>{{item.catetitle}}</h2>
                 <p>
-                    <a href="/goods/43.html">男装</a>
+                    <a href="/goods/43.html" v-for="(it, i) in item.level2catelist" :key="i">{{it.subcatetitle}}</a>
                     <a href="/goods/40.html">更多
                         <i>+</i>
                     </a>
@@ -527,25 +524,27 @@
             <div class="wrapper clearfix">
                 <div class="wrap-box">
                     <ul class="img-list">
-                        <li>
-                            <a href="#/site/goodsinfo/102" class="">
+                        <li v-for="(it, i) in item.datas" :key="i">
+                            <!-- <a href="#/site/goodsinfo/102" class=""> -->
+                            <router-link :to='"/detail"+it.artId'>
                                 <div class="img-box">
-                                    <img src="http://39.108.135.214:8899/imgs/wTgAWDLpQReTQ-ZOMdlAk4vF.jpg">
+                                    <img :src="it.img_url">
                                 </div>
                                 <div class="info">
-                                    <h3>Hazzys哈吉斯2017新款男士长袖衬衫纯棉修身英伦衬衫显瘦商务衬衣</h3>
+                                    <h3>{{it.artTitle}}</h3>
                                     <p class="price">
-                                        <b>800</b>元</p>
+                                        <b>{{it.sell_price}}</b>元</p>
                                     <p>
-                                        <strong>库存 200</strong>
+                                        <strong>库存 {{it.stock_quantity}}</strong>
                                         <span>市场价：
-                                            <s>1000</s>
+                                            <s>{{it.market_price}}</s>
                                         </span>
                                     </p>
                                 </div>
-                            </a>
+                            <!-- </a> -->
+                            </router-link>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="#/site/goodsinfo/103" class="">
                                 <div class="img-box">
                                     <img src="http://39.108.135.214:8899/imgs/SJ4EgwosX0wTqvyAvhtFGT1w.jpg">
@@ -562,7 +561,7 @@
                                     </p>
                                 </div>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -583,7 +582,9 @@ export default {
         return {
             catelist: [], 
             sliderlist: [], 
-            toplist:[]
+            toplist:[],
+            // 底部数据
+            sectionList:[]
         }
     },
     created() {
@@ -597,13 +598,12 @@ export default {
         // 获取底部数据
         axios.get("http://111.230.232.110:8899/site/goods/getgoodsgroup")
         .then((response)=>{
-            console.log(response);
-            
+            this.sectionList=response.data.message
         })
     },
     filters:{
         formatTime(value){
-            moment(value).format('YYYY年MM月DD日');
+            return moment(value).format('YYYY年MM月DD日');
         }
     }
 }
