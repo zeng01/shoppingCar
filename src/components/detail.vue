@@ -3,8 +3,8 @@
         <div class="section">
             <div class="location">
                 <span>当前位置：</span>
-                <a href="/index.html">首页</a> &gt;
-                <a href="/goods.html">购物商城</a> &gt;
+                <router-link to="/index">首页</router-link> &gt;
+                <router-link to="/index">购物商城</router-link> &gt;
                 <a href="/goods/42/1.html">商品详情</a>
             </div>
         </div>
@@ -13,25 +13,28 @@
                 <div class="wrap-box">
                     <div class="left-925">
                         <div class="goods-box clearfix">
-                            <div class="pic-box"></div>
+                            <div class="pic-box">
+                                <!-- <img :src="imglist[0].thumb_path" alt="" width="400px"> -->
+                                <img src="http://111.230.232.110:8899/imgs/XMdorze7g3yEWWdkhCLXq7Qj.jpg" alt="" width="400px">
+                            </div>
                             <div class="goods-spec">
-                                <h1>华为（HUAWEI）荣耀6Plus 16G双4G版</h1>
-                                <p class="subtitle">双800万摄像头，八核，安卓智能手机）荣耀6plus</p>
+                                <h1>{{goodsinfo.title}}</h1>
+                                <p class="subtitle">{{goodsinfo.sub_title}}</p>
                                 <div class="spec-box">
                                     <dl>
                                         <dt>货号</dt>
-                                        <dd id="commodityGoodsNo">SD9102356032</dd>
+                                        <dd id="commodityGoodsNo">{{goodsinfo.goods_no}}</dd>
                                     </dl>
                                     <dl>
                                         <dt>市场价</dt>
                                         <dd>
-                                            <s id="commodityMarketPrice">¥2499</s>
+                                            <s id="commodityMarketPrice">¥{{goodsinfo.market_price}}</s>
                                         </dd>
                                     </dl>
                                     <dl>
                                         <dt>销售价</dt>
                                         <dd>
-                                            <em id="commoditySellPrice" class="price">¥2195</em>
+                                            <em id="commoditySellPrice" class="price">¥{{goodsinfo.sell_price}}</em>
                                         </dd>
                                     </dl>
                                 </div>
@@ -60,7 +63,7 @@
                                             </div>
                                             <span class="stock-txt">
                                                 库存
-                                                <em id="commodityStockNum">60</em>件
+                                                <em id="commodityStockNum">{{goodsinfo.stock_quantity}}</em>件
                                             </span>
                                         </dd>
                                     </dl>
@@ -68,7 +71,8 @@
                                         <dd>
                                             <div id="buyButton" class="btn-buy">
                                                 <button onclick="cartAdd(this,'/',1,'/shopping.html');" class="buy">立即购买</button>
-                                                <button onclick="cartAdd(this,'/',0,'/cart.html');" class="add">加入购物车</button>
+                                                <!-- <button onclick="cartAdd(this,'/',0,'/cart.html');" class="add">加入购物车</button> -->
+                                                <router-link :to='"/cart/"+goodsinfo.category_id'>加入购物车</router-link>
                                             </div>
                                         </dd>
                                     </dl>
@@ -86,8 +90,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="tab-content entry" style="display: block;">
-                                内容
+                            <div class="tab-content entry" style="display: block;" v-html="goodsinfo.content">
                             </div>
                             <div class="tab-content" style="display: block;">
                                 <div class="comment-box">
@@ -98,30 +101,30 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea id="txtContent" name="txtContent" sucmsg=" " v-model="inputComment" @keyup.enter='getComment' datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
+                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit" @click='getComment' >
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <ul id="commentList" class="list-box">
                                         <p style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);">暂无评论，快来抢沙发吧！</p>
-                                        <li>
+                                        <li v-for="(item, index) in commentList" :key="index">
                                             <div class="avatar-box">
                                                 <i class="iconfont icon-user-full"></i>
                                             </div>
                                             <div class="inner-box">
                                                 <div class="info">
-                                                    <span>匿名用户</span>
-                                                    <span>2017/10/23 14:58:59</span>
+                                                    <span>{{item.user_name}}</span>
+                                                    <span>{{item.add_time | formatTime}}</span>
                                                 </div>
-                                                <p>testtesttest</p>
+                                                <p>{{item.content}}</p>
                                             </div>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <div class="avatar-box">
                                                 <i class="iconfont icon-user-full"></i>
                                             </div>
@@ -132,13 +135,13 @@
                                                 </div>
                                                 <p>很清晰调动单很清晰调动单</p>
                                             </div>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <div id="pagination" class="digg">
-                                            <span class="disabled">« 上一页</span>
-                                            <span class="current">1</span>
-                                            <span class="disabled">下一页 »</span>
+                                            <span class="disabled" @click='pageIndex--'>« 上一页</span>
+                                            <span class="current">{{pageIndex}}</span>
+                                            <span class="disabled" @click='pageIndex++'>下一页 »</span>
                                         </div>
                                     </div>
                                 </div>
@@ -150,18 +153,18 @@
                             <div class="sidebar-box">
                                 <h4>推荐商品</h4>
                                 <ul class="side-img-list">
-                                    <li>
+                                   <li v-for="(item, index) in hotgoodslist" :key="index">
                                         <div class="img-box">
-                                            <a href="#/site/goodsinfo/90" class="">
-                                                <img src="http://39.108.135.214:8899/upload/201504/20/thumb_201504200154277661.jpg">
-                                            </a>
+                                        <a href="#/site/goodsinfo/90" class>
+                                            <img :src="item.img_url">
+                                        </a>
                                         </div>
                                         <div class="txt-box">
-                                            <a href="#/site/goodsinfo/90" class="">佳能（Canon） EOS 700D 单反套机</a>
-                                            <span>2015-04-20</span>
+                                        <a href="#/site/goodsinfo/90" class>{{item.title}}</a>
+                                        <span>{{item.add_time | formatTime}}</span>
                                         </div>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <div class="img-box">
                                             <a href="#/site/goodsinfo/91" class="">
                                                 <img src="http://39.108.135.214:8899/upload/201504/20/thumb_201504200214471783.jpg">
@@ -237,7 +240,7 @@
                                             <a href="#/site/goodsinfo/103" class="">骆驼男装2017秋季新款运动休闲纯色夹克青年宽松长袖针织开衫卫衣</a>
                                             <span>2017-09-26</span>
                                         </div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                         </div>
@@ -249,12 +252,59 @@
 </template>
 
 <script>
+import axios from 'axios';
+import moment from 'moment'
+
 export default {
     name:'detail',
-    created() {
-        console.log(this.$route.params.id);
+    data() {
+        return {
+            goodsinfo: {},
+            imglist: [],
+            hotgoodslist: [],
+            // 评论
+            commentList:[],
+            pageIndex:1,
+            imgUrl:'',
+            pageSize:10,
+            inputComment:''
+        }
     },
-    
+    methods: {
+        getComment(){
+            if(this.inputComment==""){
+                return
+            }
+            axios.post(`http://111.230.232.110:8899/site/validate/comment/post/goods/${this.$route.params.id}`, {
+                commenttxt:this.inputComment
+
+            })
+            .then(function (response) {
+                // console.log(response);
+                location.reload
+            })
+            this.inputComment=""
+        }
+    },  
+    created() {
+        
+        const id=this.$route.params.id
+        axios.get(`http://111.230.232.110:8899/site/goods/getgoodsinfo/${id}`).then(response=>{
+            this.goodsinfo=response.data.message.goodsinfo
+            this.imglist=response.data.message.imglist
+            this.hotgoodslist = response.data.message.hotgoodslist;
+        })
+        
+        // 获取评论
+        axios.get(`http://111.230.232.110:8899/site/comment/getbypage/goods/${id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
+            this.commentList=response.data.message
+        })
+    },
+    filters:{
+        formatTime(value){
+            return moment(value).format('YYYY年MM月DD日');
+        }
+    }
 }
 </script>
 

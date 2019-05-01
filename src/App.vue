@@ -12,7 +12,8 @@
                 </div>
                 <div id="menu" class="right-box">
                     <span style="display: none;">
-                        <a href="" class="">登录</a>
+                        <!-- <a href="" class="">登录</a> -->
+                        <router-link to="/login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
