@@ -587,6 +587,18 @@ export default {
             sectionList:[]
         }
     },
+    methods: {
+        logout(){
+            axios.get('http://111.230.232.110:8899/site/account/logout').then(response=>{
+                if(response.data.status==0){
+                    alert(response.data.message)
+                    location='/login'
+                }else{
+                    alert(response.data.message)
+                }
+            })
+        }
+    },
     created() {
         axios.get(`http://111.230.232.110:8899/site/goods/gettopdata/goods`)
             .then((response)=>{

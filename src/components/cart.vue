@@ -54,19 +54,32 @@
                                     <th width="104" align="left">金额(元)</th>
                                     <th width="54" align="center">操作</th>
                                 </tr>
-                                <tr>
+                                <tr v-show="cartList.length==0">
                                     <td colspan="10">
-                                        <div class="msg-tips">
-                                            <div class="icon warning">
+                                        <div class="msg-tips" >
+                                            <div class="icon warning" >
                                                 <i class="iconfont icon-tip"></i>
                                             </div>
-                                            <div class="info">
+                                            <div class="info" >
                                                 <strong>购物车没有商品！</strong>
                                                 <p>您的购物车为空，
                                                     <a href="/index.html">马上去购物</a>吧！</p>
                                             </div>
                                         </div>
                                     </td>
+                                </tr>
+                                <tr v-for="(item, index) in cartList" :key="index" class='product'>
+                                    <td width="48" align="center">
+                                        <input type="checkbox" name="" id="">
+                                    </td>
+                                    <td align="left" colspan="2">
+                                        <img :src="item.img_url" alt="">
+                                        <span>{{item.title}}</span>
+                                    </td>
+                                    <td width="84" align="left">{{item.sell_price}}</td>
+                                    <td width="104" align="center">{{item.buycount}}</td>
+                                    <td width="104" align="left">{{item.sell_price * item.buycount }}</td>
+                                    <td width="54" align="center"><button type="button">删除</button></td>
                                 </tr>
                                 <tr>
                                     <th align="right" colspan="8">
@@ -84,7 +97,8 @@
                     <div class="cart-foot clearfix">
                         <div class="right-box">
                             <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+                            <!-- <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button> -->
+                            <router-link :to='"/order/"+ids' class="submit">立即结算</router-link>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -99,12 +113,22 @@ import axios from 'axios';
 import moment from 'moment'
 export default {
     name:'cart',
+    data() {
+        return {
+            cartList:[],
+            ids:'',
+        }
+    },
     created() {
         
-        const id=this.$route.params.id
-        axios.get(`http://111.230.232.110:8899/site/comment/getshopcargoods/ids=${id}`).then(response=>{
+        this.ids=this.$route.params.id
+        // console.log(this.ids);
+        // console.log(`http://111.230.232.110:8899/site/comment/getshopcargoods/${this.ids}`);
+        
+        
+        axios.get(`http://111.230.232.110:8899/site/comment/getshopcargoods/${this.ids}`).then(response=>{
             console.log(response.data);
-            
+            this.cartList=response.data.message
         })
         
     },
@@ -112,5 +136,15 @@ export default {
 </script>
 
 <style>
-
+tbody td img{
+    width:100px;
+}
+tr,td{
+    
+}
+.submit{
+        padding: 10px 25px;
+    color: #fff;
+    margin-left: 10px;
+}
 </style>

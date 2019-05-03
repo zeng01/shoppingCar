@@ -11,24 +11,24 @@
                     <a target="_blank" href="#"></a>
                 </div>
                 <div id="menu" class="right-box">
-                    <span style="display: none;">
+                    <span >
                         <!-- <a href="" class="">登录</a> -->
                         <router-link to="/login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
                     </span>
-                    <span>
+                    <span style="display: none;">
                         <a href="" class="">会员中心</a>
                         <strong>|</strong>
                         <a>退出</a>
                         <strong>|</strong>
                     </span>
-                    <a href="" class="">
+                    <router-link to="/cart">
                         <i class="iconfont icon-cart"></i>购物车(
                         <span id="shoppingCartCount">
                             <span>4</span>
-                        </span>)</a>
+                        </span>)</router-link>
                 </div>
             </div>
         </div>
@@ -122,8 +122,21 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+    methods: {
+        logout(){
+            axios.get('http://111.230.232.110:8899/site/account/logout').then(response=>{
+                console.log(response.data);
+                if(response.data.status==0){
+                    alert(response.data.message)
+                    location='/login'
+                }else{
+                    alert(response.data.message)
+                }
+            })
+        }
+    },
 }
 </script>
 
