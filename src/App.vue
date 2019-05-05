@@ -123,12 +123,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
     methods: {
         logout(){
-            axios.get('http://111.230.232.110:8899/site/account/logout').then(response=>{
-                console.log(response.data);
+            this.$axios.get('site/account/logout').then(response=>{
+                // console.log(response.data);
                 if(response.data.status==0){
                     alert(response.data.message)
                     location='/login'

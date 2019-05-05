@@ -589,7 +589,7 @@ export default {
     },
     methods: {
         logout(){
-            axios.get('http://111.230.232.110:8899/site/account/logout').then(response=>{
+            axios.get('site/account/logout').then(response=>{
                 if(response.data.status==0){
                     alert(response.data.message)
                     location='/login'
@@ -600,7 +600,7 @@ export default {
         }
     },
     created() {
-        axios.get(`http://111.230.232.110:8899/site/goods/gettopdata/goods`)
+        axios.get(`site/goods/gettopdata/goods`)
             .then((response)=>{
                 this.catelist=response.data.message.catelist
                 this.sliderlist=response.data.message.sliderlist
@@ -608,7 +608,7 @@ export default {
             })
 
         // 获取底部数据
-        axios.get("http://111.230.232.110:8899/site/goods/getgoodsgroup")
+        axios.get("site/goods/getgoodsgroup")
         .then((response)=>{
             this.sectionList=response.data.message
         })

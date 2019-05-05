@@ -20,7 +20,13 @@ import myOrderDetail from './components/myOrderDetail.vue'
 import vipCenter from './components/vipCenter.vue'
 // 导入路由
 import VueRouter from 'vue-router'
+// 抽取axios
 import axios from 'axios'
+Vue.prototype.$axios
+// 设置axios基地址
+axios.defaults.baseURL = 'http://111.230.232.110:8899/';
+
+
 Vue.use(VueRouter);
 
 // 写规则

@@ -86,13 +86,13 @@
                                         <a href="javascript:;" class="selected">商品介绍</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">商品评论</a>
+                                        <a href="javascript:;" @click='showDetails'>商品评论</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="tab-content entry" style="display: block;" v-html="goodsinfo.content">
                             </div>
-                            <div class="tab-content" style="display: block;">
+                            <div class="tab-content listshow" style="display: block;" >
                                 <div class="comment-box">
                                     <div id="commentForm" name="commentForm"
                                         class="form-box">
@@ -111,7 +111,7 @@
                                         </div>
                                     </div>
                                     <ul id="commentList" class="list-box">
-                                        <p style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);">暂无评论，快来抢沙发吧！</p>
+                                        <p style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);" v-show='commentList.length==0'>暂无评论，快来抢沙发吧！</p>
                                         <li v-for="(item, index) in commentList" :key="index">
                                             <div class="avatar-box">
                                                 <i class="iconfont icon-user-full"></i>
@@ -271,9 +271,17 @@ export default {
         }
     },
     methods: {
+        // 点击评论滑到指定评论位置
+        showDetails(){
+            const el=document.getElementsByClassName(`listshow`)[0];
+            this.$nextTick(function () {
+                window.scrollTo({"behavior":"smooth","top":el.offsetTop});
+            })
+        },
+
         getComment(){
              // 获取评论
-            axios.get(`http://111.230.232.110:8899/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
+            axios.get(`site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
                 this.commentList=response.data.message
             })
         },
@@ -281,33 +289,38 @@ export default {
             if(this.inputComment==""){
                 return
             }
-            axios.post(`http://111.230.232.110:8899/site/validate/comment/post/goods/${this.$route.params.id}`, {
+            axios.post(`site/validate/comment/post/goods/${this.$route.params.id}`, {
                 commenttxt:this.inputComment
 
             })
             .then(response=>{
                 // console.log(response);
-                this.getComment()
+                if(response.data.status==0){
+                    this.getComment()
+                }
+                
             })
             this.inputComment=""
         },
         prov(){
-            if(this.pageSize==1){
-                this.pageSize=1
+            if(this.pageIndex==1){
+                this.pageIndex=1
             }
-            this.pageSize--
+            this.pageIndex--
+            this.getComment()
         },
         next(){
-            if(this.pageSize==this.commentList.length){
-                this.pageSize=this.commentList.length
+            if(this.pageIndex==this.commentList.length){
+                this.pageIndex=this.commentList.length
             }
-            this.pageSize++
+            this.pageIndex++
+            this.getComment()
         }
     },  
     created() {
         
         const id=this.$route.params.id
-        axios.get(`http://111.230.232.110:8899/site/goods/getgoodsinfo/${id}`).then(response=>{
+        axios.get(`site/goods/getgoodsinfo/${id}`).then(response=>{
             this.goodsinfo=response.data.message.goodsinfo
             this.imglist=response.data.message.imglist
             this.hotgoodslist = response.data.message.hotgoodslist;
@@ -324,5 +337,8 @@ export default {
 </script>
 
 <style>
-
+.ql-align-center img{
+    display:block;
+    width:100%;
+}
 </style>

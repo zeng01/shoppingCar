@@ -10,7 +10,7 @@
         <div class="section">
             <div class="wrapper">
                 <div class="bg-wrap">
-                    <div class="nav-tit">
+                    <div class="nav-tit"> 
                         <router-link to="/login">账户登录</router-link>
                         <i>|</i>
                         <a href="/register.html">免费注册</a>
