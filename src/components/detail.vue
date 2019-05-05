@@ -140,9 +140,19 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <div id="pagination" class="digg">
-                                            <span class="disabled" @click='prov'>« 上一页</span>
+                                            <!-- <span class="disabled" @click='prov'>« 上一页</span>
                                             <span class="current">{{pageIndex}}</span>
-                                            <span class="disabled" @click='next'>下一页 »</span>
+                                            <span class="disabled" @click='next'>下一页 »</span> -->
+                                            <el-pagination
+                                                background
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange"
+                                                :current-page="pageIndex"
+                                                :page-sizes="[5, 10, 15, 20]"
+                                                :page-size="10"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="totalcount">
+                                            </el-pagination>
                                         </div>
                                     </div>
                                 </div>
@@ -270,6 +280,7 @@ export default {
             // 评论
             commentList:[],
             pageIndex:1,
+            totalcount:'',
             imgUrl:'',
             pageSize:10,
             inputComment:'',
@@ -280,6 +291,15 @@ export default {
         // 购买数量
         handleChange(value) {
         console.log(value);
+      },
+    //   分页
+      handleSizeChange(val) {
+        this.pageSize=val
+        this.getComment()
+      },
+      handleCurrentChange(val) {
+        this.pageIndex=val
+        this.getComment()
       },
         // 点击评论滑到指定评论位置
         showDetails(){
@@ -292,7 +312,10 @@ export default {
         getComment(){
              // 获取评论
             this.$axios.get(`site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
+                
                 this.commentList=response.data.message
+                this.totalcount=response.data.totalcount
+
             })
         },
         setComment(){
@@ -345,6 +368,7 @@ export default {
             this.imglist=response.data.message.imglist
             this.hotgoodslist = response.data.message.hotgoodslist;
         })
+        this.getComment()
         }
     }
     // filters:{
