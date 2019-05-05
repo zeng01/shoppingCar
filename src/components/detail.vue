@@ -15,7 +15,11 @@
                         <div class="goods-box clearfix">
                             <div class="pic-box">
                                 <!-- <img :src="imglist[0].thumb_path" alt="" width="400px"> -->
-                                <img src="http://111.230.232.110:8899/imgs/XMdorze7g3yEWWdkhCLXq7Qj.jpg" alt="" width="400px">
+                                <el-carousel height="395px">
+                                    <el-carousel-item v-for="item in imglist" :key="item.id">
+                                        <img :src="item.thumb_path" alt="" height="100%">
+                                    </el-carousel-item>
+                                </el-carousel>
                             </div>
                             <div class="goods-spec">
                                 <h1>{{goodsinfo.title}}</h1>
@@ -43,7 +47,8 @@
                                         <dt>购买数量</dt>
                                         <dd>
                                             <div class="stock-box">
-                                                <div class="el-input-number el-input-number--small">
+                                                <el-input-number v-model="num" @change="handleChange" :min="1" :max="goodsinfo.stock_quantity" label="购买数量"></el-input-number>
+                                                <!-- <div class="el-input-number el-input-number--small">
                                                     <span role="button" class="el-input-number__decrease is-disabled">
                                                         <i class="el-icon-minus"></i>
                                                     </span>
@@ -51,15 +56,11 @@
                                                         <i class="el-icon-plus"></i>
                                                     </span>
                                                     <div class="el-input el-input--small">
-                                                        <!---->
                                                         <input autocomplete="off" size="small" type="text" rows="2" max="60"
                                                             min="1" validateevent="true" class="el-input__inner" role="spinbutton"
                                                             aria-valuemax="60" aria-valuemin="1" aria-valuenow="1" aria-disabled="false">
-                                                        <!---->
-                                                        <!---->
-                                                        <!---->
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <span class="stock-txt">
                                                 库存
@@ -155,12 +156,16 @@
                                 <ul class="side-img-list">
                                    <li v-for="(item, index) in hotgoodslist" :key="index">
                                         <div class="img-box">
-                                        <a href="#/site/goodsinfo/90" class>
-                                            <img :src="item.img_url">
-                                        </a>
+                                        <!-- <a href="#/site/goodsinfo/90" class> -->
+                                        <router-link :to='"/detail/"+item.id'>
+                                        <img :src="item.img_url">
+                                        </router-link>
+                                            
+                                        <!-- </a> -->
                                         </div>
                                         <div class="txt-box">
-                                        <a href="#/site/goodsinfo/90" class>{{item.title}}</a>
+                                        <!-- <a href="#/site/goodsinfo/90" class>{{item.title}}</a> -->
+                                        <router-link :to='"/detail/"+item.id'>{{item.title}}</router-link>
                                         <span>{{item.add_time | formatTime}}</span>
                                         </div>
                                     </li>
@@ -267,10 +272,15 @@ export default {
             pageIndex:1,
             imgUrl:'',
             pageSize:10,
-            inputComment:''
+            inputComment:'',
+            num:1
         }
     },
     methods: {
+        // 购买数量
+        handleChange(value) {
+        console.log(value);
+      },
         // 点击评论滑到指定评论位置
         showDetails(){
             const el=document.getElementsByClassName(`listshow`)[0];
@@ -328,6 +338,15 @@ export default {
         
        this.getComment()
     },
+    watch:{
+        '$route.params.id'(v1){
+            axios.get(`site/goods/getgoodsinfo/${v1}`).then(response=>{
+            this.goodsinfo=response.data.message.goodsinfo
+            this.imglist=response.data.message.imglist
+            this.hotgoodslist = response.data.message.hotgoodslist;
+        })
+        }
+    }
     // filters:{
     //     formatTime(value){
     //         return moment(value).format('YYYY年MM月DD日');
@@ -340,5 +359,8 @@ export default {
 .ql-align-center img{
     display:block;
     width:100%;
+}
+.pic-box{
+    width:395px;
 }
 </style>
