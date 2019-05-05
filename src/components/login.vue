@@ -51,10 +51,15 @@ export default {
             {user_name:this.user_name,password:this.password}
         ).then(response=>{
             if(response.data.status==0){
-                alert(response.data.message)
-                this.$router.replace('/index')
+                
+          //el的友好提示
+          alert(response.data.message);
+          //登录成功后跳转到指定页面
+          this.$router.push("/index");
+         // 跳转
+            //  this.$router.replace('/index')
             }else{
-                alert(response.data.message)
+                alert(response.data.message);
             }
             
         })

@@ -37,10 +37,18 @@ Vue.filter('formatTime', function (value) {
 // 写规则
 const routes=[
   { path: '/', redirect: '/index' },
-  {path:'/index',component:index},
+  {path:'/index',component:index,
+  meta: {
+    isLogin:true
+  }
+},
   {path:'/detail/:id',component:detail},
   {path:'/cart/:id',component:cart},
-  {path:'/login',component:login},
+  {path:'/login',component:login,
+  meta: {
+    isLogin: false
+  }
+},
   {path:'/order/:id',component:order},
   {path:'/orderDetail/:orderid',component:orderDetail},
   {path:'/pay',component:pay},

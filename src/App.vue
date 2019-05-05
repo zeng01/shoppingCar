@@ -11,14 +11,14 @@
                     <a target="_blank" href="#"></a>
                 </div>
                 <div id="menu" class="right-box">
-                    <span >
+                    <span v-show="isLogin">
                         <!-- <a href="" class="">登录</a> -->
                         <router-link to="/login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
                     </span>
-                    <span style="display: none;">
+                    <span v-show="!isLogin">
                         <!-- <a href="" class="">会员中心</a> -->
                         <router-link to="/myOrderDetail">会员中心</router-link>
                         <strong>|</strong>
@@ -125,6 +125,11 @@
 <script>
 // import axios from 'axios'
 export default {
+    data() {
+        return {
+            isLogin:false
+        }
+    },
     methods: {
         logout(){
             this.$axios.get('site/account/logout').then(response=>{
@@ -138,7 +143,10 @@ export default {
             })
         }
     },
+
+
 }
+
 </script>
 
 <style>
