@@ -20,14 +20,18 @@ import myOrderDetail from './components/myOrderDetail.vue'
 import vipCenter from './components/vipCenter.vue'
 // 导入路由
 import VueRouter from 'vue-router'
+Vue.use(VueRouter);
 // 抽取axios
 import axios from 'axios'
 Vue.prototype.$axios
 // 设置axios基地址
 axios.defaults.baseURL = 'http://111.230.232.110:8899/';
+// 抽取moment过滤器
+import moment from 'moment'
+Vue.filter('formatTime', function (value) {
+  return moment(value).format('YYYY年MM月DD日');
+})
 
-
-Vue.use(VueRouter);
 
 // 写规则
 const routes=[
