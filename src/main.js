@@ -18,6 +18,7 @@ import pay from './components/pay.vue'
 import myOrderList from './components/myOrderList.vue'
 import myOrderDetail from './components/myOrderDetail.vue'
 import vipCenter from './components/vipCenter.vue'
+import memberCenter from './components/memberCenter.vue'
 // 导入路由
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);
@@ -45,7 +46,17 @@ const routes=[
   {path:'/pay',component:pay},
   {path:'/myOrderList',component:myOrderList},
   {path:'/myOrderDetail/:orderid',component:myOrderDetail},
-  {path:'/vipCenter',component:vipCenter},
+  {
+    path:'/vipCenter',component:vipCenter,
+    
+    children:[
+      {path:'',redirect:'/vipCenter/memberCenter'},
+      {path:'myOrderList',component:myOrderList},
+      {path:'myOrderDetail',component:myOrderDetail},
+      {path:'memberCenter',component:memberCenter}
+    ]
+  },
+  {path:'memberCenter',component:memberCenter}
 ]
 // 创建router实例
 const router =new VueRouter({

@@ -257,7 +257,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 // import moment from 'moment'
 
 export default {
@@ -291,7 +291,7 @@ export default {
 
         getComment(){
              // 获取评论
-            axios.get(`site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
+            this.$axios.get(`site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
                 this.commentList=response.data.message
             })
         },
@@ -299,7 +299,7 @@ export default {
             if(this.inputComment==""){
                 return
             }
-            axios.post(`site/validate/comment/post/goods/${this.$route.params.id}`, {
+            this.$axios.post(`site/validate/comment/post/goods/${this.$route.params.id}`, {
                 commenttxt:this.inputComment
 
             })
@@ -330,7 +330,7 @@ export default {
     created() {
         
         const id=this.$route.params.id
-        axios.get(`site/goods/getgoodsinfo/${id}`).then(response=>{
+        this.$axios.get(`site/goods/getgoodsinfo/${id}`).then(response=>{
             this.goodsinfo=response.data.message.goodsinfo
             this.imglist=response.data.message.imglist
             this.hotgoodslist = response.data.message.hotgoodslist;
@@ -340,7 +340,7 @@ export default {
     },
     watch:{
         '$route.params.id'(v1){
-            axios.get(`site/goods/getgoodsinfo/${v1}`).then(response=>{
+            this.$axios.get(`site/goods/getgoodsinfo/${v1}`).then(response=>{
             this.goodsinfo=response.data.message.goodsinfo
             this.imglist=response.data.message.imglist
             this.hotgoodslist = response.data.message.hotgoodslist;
@@ -356,7 +356,7 @@ export default {
 </script>
 
 <style>
-.ql-align-center img{
+.tab-content img{
     display:block;
     width:100%;
 }
