@@ -89,19 +89,32 @@
                                                         <th width="10%">状态</th>
                                                         <th width="12%">操作</th>
                                                     </tr>
-                                                    <tr>
-                                                        <td>BD20171025213815752</td>
-                                                        <td align="left">ivanyb1212</td>
+                                                    <tr v-for="(item, index) in myOrderList" :key="index">
+                                                        <td>{{item.order_no}}</td>
+                                                        <td align="left">{{item.accept_name}}</td>
                                                         <td align="left">
-                                                            <strong style="color: red;">￥7220</strong>
-                                                            <br> 在线支付
+                                                            <strong style="color: red;">￥{{item.order_amount}}</strong>
+                                                            <br> {{item.paymentTitle}}
                                                         </td>
-                                                        <td align="left">2017-10-25 21:38:15</td>
-                                                        <td align="left">
+                                                        <td align="left">{{item.add_time}}</td>
+                                                        <td align="left" v-show='item.status!=1'>
                                                             待付款
                                                         </td>
+                                                        <td align="left" v-show='item.status!=2'>
+                                                            已付款待发货
+                                                        </td>
+                                                        <td align="left" v-show='item.status!=3'>
+                                                            已发货待签收
+                                                        </td>
+                                                        <td align="left" v-show='item.status!=4'>
+                                                            已签收
+                                                        </td>
+                                                        <td align="left" v-show='item.status!=5'>
+                                                            已取消
+                                                        </td>
                                                         <td align="left">
-                                                            <a href="#/site/member/orderinfo/12" class="">查看订单</a>
+                                                            <!-- <a href="#/site/member/orderinfo/12" class="">查看订单</a> -->
+                                                            <router-link :to='"/myOrderDetail/"+item.id'>查看订单</router-link>
                                                             <br>
                                                             <a href="#/site/goods/payment/12" class="">|去付款</a>
                                                             <br>
@@ -125,8 +138,21 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios'
 
+export default {
+    name:'myOrderList',
+    data() {
+        return {
+            myOrderList:[]
+        }
+    },
+    created() {
+        axios.get(`http://111.230.232.110:8899/site/validate/order/userorderlist?pageIndex=1&pageSize=10`).then(response=>{
+            console.log(response.data);
+            this.myOrderList=response.data.message
+        })
+    },
 }
 </script>
 

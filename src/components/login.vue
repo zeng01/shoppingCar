@@ -50,9 +50,9 @@ export default {
             'http://111.230.232.110:8899/site/account/login',
             {user_name:this.user_name,password:this.password}
         ).then(response=>{
-            if(response.data.status==1){
+            if(response.data.status==0){
                 alert(response.data.message)
-                    location='#/index'
+                this.$router.replace('/index')
             }else{
                 alert(response.data.message)
             }

@@ -101,11 +101,11 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea id="txtContent" name="txtContent" sucmsg=" " v-model="inputComment" @keyup.enter='getComment' datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea id="txtContent" name="txtContent" sucmsg=" " v-model="inputComment" @keyup.enter='setComment' datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit" @click='getComment' >
+                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit" @click='setComment' >
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
@@ -139,9 +139,9 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <div id="pagination" class="digg">
-                                            <span class="disabled" @click='pageIndex--'>« 上一页</span>
+                                            <span class="disabled" @click='prov'>« 上一页</span>
                                             <span class="current">{{pageIndex}}</span>
-                                            <span class="disabled" @click='pageIndex++'>下一页 »</span>
+                                            <span class="disabled" @click='next'>下一页 »</span>
                                         </div>
                                     </div>
                                 </div>
@@ -272,6 +272,12 @@ export default {
     },
     methods: {
         getComment(){
+             // 获取评论
+            axios.get(`http://111.230.232.110:8899/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
+                this.commentList=response.data.message
+            })
+        },
+        setComment(){
             if(this.inputComment==""){
                 return
             }
@@ -279,11 +285,23 @@ export default {
                 commenttxt:this.inputComment
 
             })
-            .then(function (response) {
+            .then(response=>{
                 // console.log(response);
-                location.reload
+                this.getComment()
             })
             this.inputComment=""
+        },
+        prov(){
+            if(this.pageSize==1){
+                this.pageSize=1
+            }
+            this.pageSize--
+        },
+        next(){
+            if(this.pageSize==this.commentList.length){
+                this.pageSize=this.commentList.length
+            }
+            this.pageSize++
         }
     },  
     created() {
@@ -295,10 +313,7 @@ export default {
             this.hotgoodslist = response.data.message.hotgoodslist;
         })
         
-        // 获取评论
-        axios.get(`http://111.230.232.110:8899/site/comment/getbypage/goods/${id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`).then(response=>{
-            this.commentList=response.data.message
-        })
+       this.getComment()
     },
     filters:{
         formatTime(value){

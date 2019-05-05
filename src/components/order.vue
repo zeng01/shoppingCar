@@ -44,6 +44,7 @@
                             <span>1、收货地址</span>
                         </h2>
                         <div id="orderForm" name="orderForm" url="">
+                            
                             <div class="form-box address-info">
                                 <dl class="form-group">
                                     <dt>收货人姓名：</dt>
@@ -210,7 +211,7 @@
                                     <dl>
                                         <dt>订单备注(100字符以内)</dt>
                                         <dd>
-                                            <textarea name="message" class="input" style="height:35px;"></textarea>
+                                            <textarea name="message" class="input" style="height:35px;" id='message'></textarea>
                                         </dd>
                                     </dl>
                                 </div>
@@ -231,8 +232,8 @@
                                     <p class="btn-box">
                                         <!-- <a class="btn button" href="/cart.html">返回购物车</a> -->
                                         <router-link :to='"/cart/"+goodsids' class="btn button">返回购物车</router-link>
-                                        <!-- <a id="btnSubmit" class="btn submit">确认提交</a> -->
-                                        <router-link to="/orderDetail" class="btn submit">确认提交</router-link>
+                                        <!-- <a id="btnSubmit" class="btn submit" @click='getOrderDetail'>确认提交</a> -->
+                                        <router-link :to='"/orderDetail/"+orderid' class="btn submit">确认提交</router-link>
                                     </p>
                                 </div>
                             </div>
@@ -247,12 +248,47 @@
 <script>
 import axios from 'axios';
 import moment from 'moment'
+import $ from 'jquery'
 export default {
     name:'order',
     data() {
         return {
             orderList:[],
-            goodsids:''
+            goodsids:'',
+            goodsAmount:undefined,
+            orderid:undefined
+        }
+    },
+    methods: {
+        getOrderDetail(){
+            const accept_name=$('#accept_name').val()
+            const province=$('#province').val()
+            let address=$('#address').val()
+            const mobile=$('#mobile').val()
+            const telphone=$('#telphone').val()
+            const email=$('#email').val()
+            const post_code=$('#post_code').val()
+            const express_id=$('input[name="express_id"]').val()
+            const payment_id=$('input[name="payment_id"]').val()
+            const message=$('#message').val()
+
+            address=province + address
+            // 快递费
+            const expressMoment=0
+
+
+
+            axios.post("http://111.230.232.110:8899/site/validate/order/setorder",{
+                accept_name,
+                address,
+                mobile,
+                email,
+                express_id,
+                message
+            }).then(response=>{
+                alert(response.data.message);
+                this.orderid=response.data.message.orderid
+            })
         }
     },
     created() {

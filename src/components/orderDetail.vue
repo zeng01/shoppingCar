@@ -21,13 +21,13 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>订 单 号：</dt>
-                                            <dd>BD2018012523954579</dd>
+                                            <dd>{{orderList.order_no}}</dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>收货人姓名：</dt>
-                                            <dd>张三</dd>
+                                            <dd>{{orderList.accept_name}}</dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -35,14 +35,14 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>送货地址：</dt>
-                                            <dd>河北省,石家庄市,新华区
+                                            <dd>{{orderList.area+orderList.address}}
                                             </dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>手机号码：</dt>
-                                            <dd>13811111111</dd>
+                                            <dd>1345678995</dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                     <div class="el-col el-col-12">
                                         <dl class="form-group">
                                             <dt>支付金额：</dt>
-                                            <dd>10408 元</dd>
+                                            <dd>{{orderList.order_amount}} 元</dd>
                                         </dl>
                                     </div>
                                     <div class="el-col el-col-12">
@@ -64,7 +64,7 @@
                                         <div class="el-col el-col-12">
                                                 <dl class="form-group">
                                                     <dt>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</dt>
-                                                    <dd>请尽快发货</dd>
+                                                    <dd>{{orderList.message}}</dd>
                                                 </dl>
                                             </div>
                                 </div>
@@ -83,8 +83,19 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-
+    name:'orderDetail',
+    data() {
+        return {
+            orderList:{}
+        }
+    },
+    created() {
+        axios.get(`http://111.230.232.110:8899/site/validate/order/getorder/:${this.$route.params.orderid}`).then(response=>{
+            this.orderList=response.data.message[0]
+        })
+    },
 }
 </script>
 

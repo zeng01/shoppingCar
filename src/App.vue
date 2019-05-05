@@ -19,9 +19,10 @@
                         <strong>|</strong>
                     </span>
                     <span style="display: none;">
-                        <a href="" class="">会员中心</a>
+                        <!-- <a href="" class="">会员中心</a> -->
+                        <router-link to="/myOrderDetail">会员中心</router-link>
                         <strong>|</strong>
-                        <a>退出</a>
+                        <a href="javascript:void()" @click='logout'>退出</a>
                         <strong>|</strong>
                     </span>
                     <router-link to="/cart">

@@ -31,11 +31,11 @@ const routes=[
   {path:'/cart/:id',component:cart},
   {path:'/login',component:login},
   {path:'/order/:id',component:order},
-  {path:'/orderDetail',component:orderDetail},
+  {path:'/orderDetail/:orderid',component:orderDetail},
   {path:'/pay',component:pay},
   {path:'/myOrderList',component:myOrderList},
-  {path:'/myOrderDetail',component:myOrderDetail},
-  {path:'/vipCenter',component:vipCenter}
+  {path:'/myOrderDetail/:orderid',component:myOrderDetail},
+  {path:'/vipCenter',component:vipCenter},
 ]
 // 创建router实例
 const router =new VueRouter({
